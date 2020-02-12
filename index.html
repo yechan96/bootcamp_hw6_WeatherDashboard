@@ -15,6 +15,7 @@
     <!-- content -->
     <div class="jumbotron text-justify" style="margin-left: auto; margin-right: auto; background-color: blue;">
         <h1>Weather Dashboard</h1>
+        <button class="btn btn-secondary clear">Clear</button>
     </div>
 
     <div class="row mb-3" >
@@ -136,6 +137,11 @@
             fillUVIndex(index);
             propagateForeCastSearch(index);
         });
+
+        $(".clear").on("click",function(){
+            localStorage.clear();
+            location.reload();
+        })
         
         function propagateWeatherSearch(){
             $("#searchResults").empty();
