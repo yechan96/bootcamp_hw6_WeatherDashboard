@@ -173,8 +173,8 @@
         function propagateForeCastSearch(index){
             $("#forecast").empty();
             var temp = storedWeather[index].forecast;
-            var count = temp.cnt;
-            var dayIndex = [0,count/4,count/2,(3*count/4),count-1];
+            var count = 8;
+            var dayIndex = [0,count,2*count,3*count,4*count];
             for (var i = 0; i<dayIndex.length; i++){
                 var tempWeather = temp.list[dayIndex[i]];
                 var tempHead = $("<div>").attr({
