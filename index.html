@@ -26,12 +26,12 @@
             <div class="input-group mt-2">
                 <input type="text" class="form-control"></input>
                 <span class="input-group-btn">
-                    <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+                    <button class="btn btn-primary searchSubmit"><i class="fa fa-search"></i></button>
                 </span>
             </div>
 
             <br>
-            <div class="btn-group-vertical w-100" id="searchResults mb-2">
+            <div class="btn-group-vertical w-100" id="searchResults">
                 <!-- <button class="btn btn-light border-secondary text-left weatherSearch" value="index">
                     LA
                 </button> -->
@@ -44,7 +44,7 @@
         <div class="col-sm-8 float-right" style="margin-right: auto; margin-left: auto;">
             <div class="border rounded" id="weather">
                 <div class="ml-3 mt-3">
-                    <h3 class="mb-3">City <img id="currIcon"></h3>
+                    <h3 id ="city" class="mb-3">City <img id="currIcon"></h3>
                     <p id="temperature">Temperature: </p>
                     <p id="humidity">Humidity: </p>
                     <p id="windspeed">Wind Speed: </p>
@@ -85,8 +85,120 @@
 
     $(document).ready(function(){
         var storedWeather = JSON.parse(localStorage.getItem("weather")) || [];
+        var apiKey = ""
+        var tempObj ={
+            location: "",
+            currentWeather: {},
+            forecast: {},
+            uvIndex:{}
+        };
+        
+        if(storedWeather.length != 0){
+            propageWeatherSearch();
+            fillInWeatherInfo(0);
+            propagateWeatherSearch(0);
 
+        }
 
+        $(".searchSubmit").on("click",function(){
+            var searchInput =$(".form-control").val();
+            var weatherSearch = "api.openweathermap.org/data/2.5/weather?q={"+searchInput+"}&appid={your api key}";
+            var forecastSearch = "api.openweathermap.org/data/2.5/forecast?q={"+searchInput+"}&appid={your api key}";
+
+            // updateStoredWeather(searchInput, weatherSearchResults,forecastSearchResults,uvSearch(lon,lat));
+            propagateWeatherSearch();
+            fillInWeatherInfo(storedWeather.length-1);
+            fillUVIndex(storedWeather.length-1);
+            propagateForeCastSearch(storedWeather.length-1);
+        });
+
+        $(document).on("click",".weatherSearch",function(){
+            var index = this.value;
+            fillInWeatherInfo(index);
+            fillUVIndex(index);
+            propagateForeCastSearch(index);
+        });
+        
+        function propagateWeatherSearch(){
+            $("#searchResults").empty();
+            for (var i = 0; i<storedWeather.length; i++){
+                var location = storedWeather[i].location;
+                console.log(location);
+                var btnTemp = $("<button>").text(location);
+                btnTemp.attr({
+                    class: "btn btn-light border-secondary text-left weatherSearch",
+                    value: i
+                })
+                $("#searchResults").append(btnTemp);
+            }
+        };
+
+        function fillInWeatherInfo(index){
+            var temp = storedWeather[index].currentWeather;
+            $("#city").text(temp.name + " (" + moment("MM DD YYYY")+") ");
+            $("#currIcon").attr("src",getIcon(temp.weather.icon));
+            $("#temperature").text("Temperature: "+kelvinToFaraheit(main.temp));
+            $("#humidity").text("Humidity: "+humidityText(temp.weather.humidity));
+            $("#windspeed").text("Wind Speed: "+ temp.weather.wind.speed +" MPH");
+        };
+
+        function fillUVIndex(index){
+            var temp = storedWeather[index].uvIndex;
+            $("#uvIndex").text("UV Index: "+temp.value);
+        }
+
+        function propagateForeCastSearch(index){
+            $("#forecast").empty();
+            var temp = storedWeather[index].forecast;
+            var count = temp.cnt;
+            var dayIndex = [0,count/4,count/2,(3*count/4),count-1];
+            for (var i = 0; i<dayIndex.length; i++){
+                var tempWeather = temp.list[dayIndex];
+                var tempHead = $("<div>").attr({
+                    class: "col-sm-2 border rounded",
+                    style: "background: blue; margin-right: auto; margin-left: auto;"
+                });
+                var tempDate = $("<p>").text(moment(tempWeather.dt_txt,"MM-DD-YYYY"));
+                tempDate.attr("class","text-white");
+                var tempImg = $("<img>").attr("src", getIcon(tempWeather.weather.icon));
+                var tempTemp = $("<p>").text(kelvinToFaraheit(tempWeather.main.temp));
+                tempTemp.attr("class","text-white");
+                var tempHumid = $("<p>").text(humidityText(tempWeather.main.humidity));
+                tempHumid.attr("class","text-white");
+
+                tempHead.append(tempDate,tempImg,tempTemp,tempHumid);
+                $("#forecast").append(tempHead);
+            }
+        };
+        
+
+        function updateStoredWeather(location, currentWeather, forecast, uvIndex){
+            tempObj.location = location;
+            tempObj.currentWeather = currentWeather;
+            tempObj.forecast = forecast;
+            tempObj.uvIndex = uvIndex;
+            storedWeather.push(tempObj);
+            console.log(storedWeather);
+        };
+
+        function getIcon(iconID){
+            return "http://openweathermap.org/img/wn/"+iconID+"@2x.png";
+        }
+
+        function kelvinToFaraheit(temperature){
+            var temp = ((temperature - 273.15) *9/5) + 32;
+            return temp + "°F";
+        }
+
+        function humidityText(humidity){
+            return humidity + "%";
+        }
+
+        function uvSearch(lon,lat){
+            var uvSearch ="http://api.openweathermap.org/data/2.5/uvi?appid={appid}&lat={"+lat+"}&lon={"+lon+"}";
+            var tempObj;
+            return tempObj;
+        }
 
     }); //end of ready
     </script>
