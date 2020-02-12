@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <title>Weather Dashboard</title>
 </head>
 <body>
@@ -15,7 +16,7 @@
         <h1>Weather Dashboard</h1>
     </div>
 
-    <div class="row" >
+    <div class="row mb-3" >
         <!-- search -->
         <div class="col-sm-3 float-left" style="margin-right: auto; margin-left: auto; background: lightgrey;">
             <div class="title mt-3">
@@ -30,17 +31,47 @@
             </div>
 
             <br>
-            <div id="searchResults mb-2">
+            <div class="btn-group-vertical w-100" id="searchResults mb-2">
+                <!-- <button class="btn btn-light border-secondary text-left weatherSearch" value="index">
+                    LA
+                </button> -->
             </div>
+            
 
         </div>
         
         <!-- results -->
         <div class="col-sm-8 float-right" style="margin-right: auto; margin-left: auto;">
             <div class="border rounded" id="weather">
-                <h2>Hello</h2>
+                <div class="ml-3 mt-3">
+                    <h3 class="mb-3">City <img id="currIcon"></h3>
+                    <p id="temperature">Temperature: </p>
+                    <p id="humidity">Humidity: </p>
+                    <p id="windspeed">Wind Speed: </p>
+                    <p id="uvIndex">UV Index: </p>
+                </div>
             </div>
-            <div id="forecast">
+
+            <div class="mt-3">
+                <h3>5-Day Forecast:</h3>
+
+                <div class="row"id="forecast">
+
+                    <!-- <div class="col-sm-2 border rounded" style="background: blue; margin-right: auto; margin-left: auto;">
+                        <p class="text-white">
+                            Date
+                        </p>
+                        <img src="http://openweathermap.org/img/wn/10d@2x.png ">
+                        <p class="text-white">
+                            Temp:
+                        </p>
+                        <p class="text-white">
+                            Humidity:
+                        </p>
+                    </div> -->
+
+                </div>
+
             </div>
 
         </div>
@@ -52,9 +83,12 @@
     // api.openweathermap.org/data/2.5/forecast?q={city name}&appid={your api key} - 5day forecast
     // http://openweathermap.org/img/wn/10d@2x.png - icon 
 
+    $(document).ready(function(){
+        var storedWeather = JSON.parse(localStorage.getItem("weather")) || [];
 
 
 
+    }); //end of ready
     </script>
 </body>
 </html>
