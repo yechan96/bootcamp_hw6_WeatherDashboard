@@ -100,8 +100,8 @@
 
         $(".searchSubmit").on("click",function(){
             var searchInput =$(".form-control").val();
-            var weatherSearch = "http://api.openweathermap.org/data/2.5/weather?q="+searchInput+"&appid="+apiKey;
-            var forecastSearch = "http://api.openweathermap.org/data/2.5/forecast?q="+searchInput+"&appid="+apiKey;
+            var weatherSearch = "https://api.openweathermap.org/data/2.5/weather?q="+searchInput+"&appid="+apiKey;
+            var forecastSearch = "https://api.openweathermap.org/data/2.5/forecast?q="+searchInput+"&appid="+apiKey;
 
 
             $.ajax({
@@ -111,7 +111,7 @@
                     var tempWeather = response;
                     var lat = tempWeather.coord.lat;
                     var lon = tempWeather.coord.lon;
-                    var uvSearch ="http://api.openweathermap.org/data/2.5/uvi?appid="+apiKey+"&lat="+lat+"&lon="+lon;
+                    var uvSearch ="https://api.openweathermap.org/data/2.5/uvi?appid="+apiKey+"&lat="+lat+"&lon="+lon;
                     $.ajax({
                         url: forecastSearch,
                         method:"GET"
